@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zin Thu Thu Latt — UX Designer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root { --black:#0e0e0e; --white:#f5f3ef; --accent:#c8a96e; --card-bg:#161616; --muted:rgba(245,243,239,0.4); }
+  html { scroll-behavior: smooth; }
+  body { background:var(--black); color:var(--white); font-family:'DM Sans',sans-serif; font-weight:300; overflow-x:hidden; }
+
+  /* ── NAV ─────────────────────────────────── */
+  nav { position:fixed; top:0; left:0; right:0; z-index:100; display:flex; justify-content:space-between; align-items:center; padding:1.6rem 4rem; }
+  nav::before { content:''; position:absolute; inset:0; background:linear-gradient(to bottom,rgba(14,14,14,0.95) 0%,transparent 100%); pointer-events:none; }
+  .nav-name { font-family:'Playfair Display',serif; font-size:1rem; letter-spacing:0.04em; position:relative; }
+  .nav-links { display:flex; gap:2.5rem; position:relative; }
+  .nav-links a { color:var(--white); text-decoration:none; font-size:0.72rem; letter-spacing:0.14em; text-transform:uppercase; opacity:0.5; transition:opacity 0.2s; }
+  .nav-links a:hover { opacity:1; }
+
+  /* ── HERO ────────────────────────────────── */
+  #hero { height:100vh; display:flex; flex-direction:column; justify-content:center; padding:0 4rem; position:relative; overflow:hidden; }
+  .hero-line { position:absolute; top:0; left:4rem; width:1px; height:100%; background:rgba(200,169,110,0.07); }
+  .hero-line-r { position:absolute; top:0; right:4rem; width:1px; height:100%; background:rgba(200,169,110,0.07); }
+  .hero-content { position:relative; max-width:700px; }
+  .hero-eyebrow { font-size:0.7rem; letter-spacing:0.22em; text-transform:uppercase; color:var(--accent); margin-bottom:1.6rem; opacity:0; animation:fadeUp 0.7s ease 0.1s forwards; }
+  .hero-title { font-family:'Playfair Display',serif; font-size:clamp(3rem,6.5vw,5.5rem); font-weight:900; line-height:1.0; margin-bottom:2.4rem; opacity:0; animation:fadeUp 0.8s ease 0.3s forwards; }
+  .hero-title em { font-style:italic; color:var(--accent); }
+  .hero-tagline { font-size:0.9rem; line-height:1.8; color:var(--muted); max-width:380px; opacity:0; animation:fadeUp 0.8s ease 0.55s forwards; }
+  .hero-scroll { position:absolute; bottom:3rem; left:4rem; font-size:0.65rem; letter-spacing:0.18em; text-transform:uppercase; color:rgba(245,243,239,0.25); display:flex; align-items:center; gap:0.8rem; opacity:0; animation:fadeUp 0.8s ease 0.9s forwards; }
+  .hero-scroll::before { content:''; display:block; width:30px; height:1px; background:var(--accent); opacity:0.4; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+
+  /* ── PROJECTS ────────────────────────────── */
+  #projects { padding:7rem 4rem 5rem; }
+  .section-eyebrow { font-size:0.68rem; letter-spacing:0.22em; text-transform:uppercase; color:var(--accent); margin-bottom:4rem; display:flex; align-items:center; gap:1rem; }
+  .section-eyebrow::before { content:''; display:block; width:24px; height:1px; background:var(--accent); opacity:0.5; }
+
+  /* Project list — rows not tall cards */
+  .project-list { display:flex; flex-direction:column; }
+  .project-row { display:grid; grid-template-columns:4rem 1fr auto; align-items:center; gap:2rem; padding:2rem 0; border-bottom:1px solid rgba(255,255,255,0.06); cursor:pointer; transition:background 0.2s; position:relative; }
+  .project-row:first-child { border-top:1px solid rgba(255,255,255,0.06); }
+  .project-row:hover { background:rgba(255,255,255,0.02); }
+  .project-row:hover .row-arrow { opacity:1; transform:translateX(0); }
+  .project-row:hover .row-title { color:var(--accent); }
+
+  .row-num { font-family:'Playfair Display',serif; font-size:0.85rem; color:rgba(200,169,110,0.35); font-weight:700; padding-left:0.2rem; }
+  .row-body { display:flex; flex-direction:column; gap:0.35rem; }
+  .row-title { font-family:'Playfair Display',serif; font-size:1.35rem; font-weight:700; line-height:1.2; transition:color 0.2s; }
+  .row-tags { display:flex; flex-wrap:wrap; gap:0.4rem; margin-top:0.1rem; }
+  .row-tag { font-size:0.6rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); }
+  .row-tag + .row-tag::before { content:'·'; margin-right:0.4rem; opacity:0.4; }
+  .row-arrow { font-size:0.8rem; color:var(--accent); opacity:0; transform:translateX(-6px); transition:opacity 0.2s, transform 0.2s; white-space:nowrap; font-size:0.75rem; letter-spacing:0.08em; }
+
+  /* ── ABOUT ───────────────────────────────── */
+  #about { padding:7rem 4rem; display:grid; grid-template-columns:1fr 1fr; gap:6rem; align-items:start; border-top:1px solid rgba(255,255,255,0.05); }
+  .about-title { font-family:'Playfair Display',serif; font-size:clamp(1.8rem,3vw,2.6rem); font-weight:700; line-height:1.15; margin-bottom:1.6rem; }
+  .about-title em { font-style:italic; color:var(--accent); }
+  .about-text { font-size:0.875rem; line-height:1.9; color:var(--muted); margin-bottom:1.2rem; }
+  .about-skills { display:flex; flex-wrap:wrap; gap:0.45rem; margin-top:2rem; }
+  .skill-tag { font-size:0.65rem; letter-spacing:0.1em; text-transform:uppercase; border:1px solid rgba(200,169,110,0.25); color:rgba(200,169,110,0.7); padding:0.28rem 0.75rem; border-radius:2px; }
+
+  .about-stats { display:flex; flex-direction:column; gap:2.5rem; padding-top:0.4rem; }
+  .stat-row { display:flex; align-items:baseline; gap:1rem; padding-bottom:2.5rem; border-bottom:1px solid rgba(255,255,255,0.05); }
+  .stat-row:last-child { border-bottom:none; padding-bottom:0; }
+  .stat-num { font-family:'Playfair Display',serif; font-size:2.8rem; font-weight:900; color:var(--accent); line-height:1; min-width:3rem; }
+  .stat-label { font-size:0.78rem; color:var(--muted); line-height:1.5; letter-spacing:0.02em; }
+
+  /* ── CONTACT ─────────────────────────────── */
+  #contact { padding:5rem 4rem 6rem; border-top:1px solid rgba(255,255,255,0.05); display:flex; flex-direction:column; align-items:flex-start; }
+  .contact-label { font-size:0.68rem; letter-spacing:0.22em; text-transform:uppercase; color:var(--accent); margin-bottom:2rem; display:flex; align-items:center; gap:1rem; }
+  .contact-label::before { content:''; display:block; width:24px; height:1px; background:var(--accent); opacity:0.5; }
+  .contact-title { font-family:'Playfair Display',serif; font-size:clamp(2rem,4.5vw,3.6rem); font-weight:900; line-height:1.05; margin-bottom:2.5rem; }
+  .contact-title em { font-style:italic; color:var(--accent); }
+  .contact-email { display:inline-flex; align-items:center; gap:0.6rem; font-size:0.85rem; letter-spacing:0.06em; color:var(--white); text-decoration:none; border-bottom:1px solid rgba(200,169,110,0.4); padding-bottom:0.25rem; transition:color 0.2s,border-color 0.2s; }
+  .contact-email:hover { color:var(--accent); border-color:var(--accent); }
+
+  /* ── FOOTER ──────────────────────────────── */
+  footer { padding:1.8rem 4rem; display:flex; justify-content:space-between; align-items:center; border-top:1px solid rgba(255,255,255,0.04); }
+  footer span { font-size:0.7rem; color:rgba(245,243,239,0.2); letter-spacing:0.05em; }
+
+  /* ── MODAL ───────────────────────────────── */
+  .modal-backdrop { position:fixed; inset:0; z-index:200; background:rgba(0,0,0,0.93); backdrop-filter:blur(8px); display:none; align-items:flex-start; justify-content:center; padding:2rem; overflow-y:auto; }
+  .modal-backdrop.open { display:flex; }
+  .modal { background:#131313; border:1px solid rgba(255,255,255,0.08); max-width:920px; width:100%; margin-top:2rem; margin-bottom:2rem; border-radius:4px; overflow:hidden; animation:modalIn 0.35s cubic-bezier(0.25,0.46,0.45,0.94); }
+  @keyframes modalIn { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+  .modal-close { position:absolute; top:1.5rem; right:1.5rem; background:rgba(255,255,255,0.08); border:none; color:var(--white); width:36px; height:36px; border-radius:50%; cursor:pointer; font-size:1rem; display:flex; align-items:center; justify-content:center; transition:background 0.2s; z-index:10; }
+  .modal-close:hover { background:rgba(255,255,255,0.15); }
+  .modal-hero-banner { width:100%; height:280px; display:flex; align-items:center; justify-content:center; }
+  .modal-body { padding:2.5rem 3rem; }
+  .modal-tag { color:var(--accent); font-size:0.7rem; letter-spacing:0.15em; text-transform:uppercase; margin-bottom:0.7rem; }
+  .modal-title { font-family:'Playfair Display',serif; font-size:2rem; font-weight:700; margin-bottom:0.5rem; }
+  .modal-subtitle { font-size:0.9rem; color:rgba(245,243,239,0.4); margin-bottom:1.8rem; }
+  .modal-h { font-size:0.72rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--accent); margin:2rem 0 0.7rem; }
+  .modal-p { font-size:0.88rem; line-height:1.85; color:rgba(245,243,239,0.65); }
+  .modal-meta { display:flex; gap:2.5rem; flex-wrap:wrap; margin-top:1.8rem; padding-top:1.8rem; border-top:1px solid rgba(255,255,255,0.06); }
+  .modal-meta-item label { display:block; font-size:0.65rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--accent); margin-bottom:0.3rem; }
+  .modal-meta-item span { font-size:0.85rem; color:rgba(245,243,239,0.7); }
+  .modal-screens { margin-top:2.5rem; display:grid; grid-template-columns:1fr 1fr; gap:0.6rem; }
+  .screen-block .img-wrap { height:190px; border-radius:2px; overflow:hidden; display:flex; align-items:center; justify-content:center; }
+  .screen-label { font-size:0.62rem; letter-spacing:0.08em; color:rgba(245,243,239,0.3); margin-top:0.35rem; text-transform:uppercase; }
+  .modal-links { display:flex; gap:1.5rem; margin-top:2rem; flex-wrap:wrap; }
+  .modal-link { display:inline-flex; align-items:center; gap:0.5rem; font-size:0.75rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--accent); text-decoration:none; border-bottom:1px solid rgba(200,169,110,0.3); padding-bottom:0.2rem; transition:border-color 0.2s; }
+  .modal-link:hover { border-color:var(--accent); }
+  .process-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; margin-top:0.8rem; }
+  .process-step { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:3px; padding:1rem; }
+  .process-step-num { font-family:'Playfair Display',serif; font-size:1.4rem; color:var(--accent); opacity:0.5; }
+  .process-step-label { font-size:0.72rem; letter-spacing:0.08em; text-transform:uppercase; color:rgba(245,243,239,0.6); margin-top:0.3rem; }
+  .callout { background:rgba(200,169,110,0.06); border-left:2px solid var(--accent); padding:1rem 1.2rem; margin-top:1rem; border-radius:0 3px 3px 0; }
+  .callout p { font-size:0.85rem; line-height:1.7; color:rgba(245,243,239,0.7); font-style:italic; }
+
+  /* ── RESPONSIVE ──────────────────────────── */
+  @media (max-width:768px) {
+    nav, #hero, #projects, #about, #contact, footer { padding-left:1.5rem; padding-right:1.5rem; }
+    .hero-line, .hero-line-r { display:none; }
+    .project-row { grid-template-columns:2.5rem 1fr; gap:1rem; }
+    .row-arrow { display:none; }
+    #about { grid-template-columns:1fr; gap:3.5rem; }
+    .modal-body { padding:1.5rem; }
+    .modal-screens, .process-grid { grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-name">Zin Thu Thu Latt</div>
+  <div class="nav-links">
+    <a href="#projects">Work</a>
+    <a href="#about">About</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-line"></div>
+  <div class="hero-line-r"></div>
+  <div class="hero-content">
+    <p class="hero-eyebrow">UX / UI Designer</p>
+    <h1 class="hero-title">I design with<br><em>empathy.</em></h1>
+    <p class="hero-tagline">From research to prototype — creating interfaces that feel effortless for the people using them.</p>
+  </div>
+  <div class="hero-scroll">Scroll to work</div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-eyebrow">Selected Work</div>
+  <div class="project-list">
+
+    <div class="project-row" onclick="openModal('resto')">
+      <div class="row-num">01</div>
+      <div class="row-body">
+        <div class="row-title">Modern Restaurant Mobile App</div>
+        <div class="row-tags">
+          <span class="row-tag">Mobile App</span>
+          <span class="row-tag">Full UX Process</span>
+          <span class="row-tag">Google UX Certificate</span>
+        </div>
+      </div>
+      <div class="row-arrow">View case study →</div>
+    </div>
+
+    <div class="project-row" onclick="openModal('ktt')">
+      <div class="row-num">02</div>
+      <div class="row-body">
+        <div class="row-title">KTT — Karen Teacher Training Platform</div>
+        <div class="row-tags">
+          <span class="row-tag">Dashboard Design</span>
+          <span class="row-tag">EdTech</span>
+          <span class="row-tag">Volunteer</span>
+        </div>
+      </div>
+      <div class="row-arrow">View case study →</div>
+    </div>
+
+    <div class="project-row" onclick="openModal('aac')">
+      <div class="row-num">03</div>
+      <div class="row-body">
+        <div class="row-title">Asia Art Connect — Art Marketplace</div>
+        <div class="row-tags">
+          <span class="row-tag">UI Design</span>
+          <span class="row-tag">E-Commerce</span>
+          <span class="row-tag">First Figma Project</span>
+        </div>
+      </div>
+      <div class="row-arrow">View case study →</div>
+    </div>
+
+    <div class="project-row" onclick="openModal('eco')">
+      <div class="row-num">04</div>
+      <div class="row-body">
+        <div class="row-title">Environmentally Friendly Living Guide</div>
+        <div class="row-tags">
+          <span class="row-tag">Agile Team</span>
+          <span class="row-tag">React + Node.js</span>
+          <span class="row-tag">3× User Testing</span>
+        </div>
+      </div>
+      <div class="row-arrow">View case study →</div>
+    </div>
+
+    <div class="project-row" onclick="openModal('fyp')">
+      <div class="row-num">05</div>
+      <div class="row-body">
+        <div class="row-title">Emotion-Aware Adaptive Email &amp; Task Manager</div>
+        <div class="row-tags">
+          <span class="row-tag">Final Year Project</span>
+          <span class="row-tag">Affective Computing</span>
+          <span class="row-tag">React + MediaPipe</span>
+        </div>
+      </div>
+      <div class="row-arrow">View case study →</div>
+    </div>
+
+    <div class="project-row" onclick="openModal('id')">
+      <div class="row-num">06</div>
+      <div class="row-body">
+        <div class="row-title">Interaction Design Studies — 5 App Analyses</div>
+        <div class="row-tags">
+          <span class="row-tag">UX Analysis</span>
+          <span class="row-tag">Heuristic Evaluation</span>
+          <span class="row-tag">Coursework</span>
+        </div>
+      </div>
+      <div class="row-arrow">View case study →</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div>
+    <div class="section-eyebrow" style="margin-bottom:2rem;">About</div>
+    <h2 class="about-title">Designing for real people,<br><em>real impact.</em></h2>
+    <p class="about-text">I'm a UX/UI designer who started in front-end development and found my passion in design. My work spans social impact education, art e-commerce, and workplace well-being — always starting from the user's perspective.</p>
+    <p class="about-text">I completed the Google UX Design Certificate, experiencing the full process end-to-end for the first time — research, wireframing, prototyping, testing, iterating. That changed how I approach every project since.</p>
+    <div class="about-skills">
+      <span class="skill-tag">User Research</span>
+      <span class="skill-tag">Wireframing</span>
+      <span class="skill-tag">Prototyping</span>
+      <span class="skill-tag">Figma</span>
+      <span class="skill-tag">Usability Testing</span>
+      <span class="skill-tag">Personas</span>
+      <span class="skill-tag">Information Architecture</span>
+      <span class="skill-tag">React</span>
+    </div>
+  </div>
+  <div class="about-stats">
+    <div class="stat-row">
+      <div class="stat-num">6</div>
+      <div class="stat-label">End-to-end design projects</div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-num">3</div>
+      <div class="stat-label">Rounds of user testing on latest build</div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-num">1</div>
+      <div class="stat-label">Volunteer social impact project</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-label">Get In Touch</div>
+  <h2 class="contact-title">Let's build something<br><em>meaningful.</em></h2>
+  <a href="mailto:auroragao.tt@gmail.com" class="contact-email">auroragao.tt@gmail.com →</a>
+</section>
+
+<footer>
+  <span>© 2025 Zin Thu Thu Latt</span>
+  <span>UX / UI Designer</span>
+</footer>
+
+<!-- ═══════════════════════════════════════════
+     MODALS — untouched from original
+═══════════════════════════════════════════ -->
+<div class="modal-backdrop" id="modalBackdrop" onclick="closeModal(event)">
+  <div class="modal" id="modalContent">
+    <div style="position:relative;">
+      <button class="modal-close" onclick="closeModalDirect()">✕</button>
+
+      <!-- RESTAURANT MODAL -->
+      <div id="modal-resto" class="modal-inner" style="display:none;">
+        <div class="modal-hero-banner" style="background:linear-gradient(135deg,#1a1208,#3a2a10);">
+          <span style="font-family:'Playfair Display',serif;font-size:1.6rem;color:rgba(255,255,255,0.12);letter-spacing:0.05em;">Modern Restaurant App</span>
+        </div>
+        <div class="modal-body">
+          <div class="modal-tag">Google UX Design Certificate · Mobile App · April – Sep 2023</div>
+          <div class="modal-title">Modern Restaurant Mobile App</div>
+          <div class="modal-subtitle">Delivery, ordering & table reservation for a fusion restaurant with a sunset view</div>
+
+          <div class="modal-h">The Problem</div>
+          <div class="modal-p">Two overlapping challenges: during peak hours, customers couldn't get quality food delivered — they had to dine in. And since the restaurant sits at a scenic sunset-view location, securing a spot was becoming a source of anxiety for regulars.</div>
+
+          <div class="modal-h">The Goal</div>
+          <div class="modal-p">Design a mobile app that solves both: an online ordering and delivery system, and a table reservation flow with sunset seating as a key feature.</div>
+
+          <div class="modal-h">Design Process</div>
+          <div class="process-grid">
+            <div class="process-step"><div class="process-step-num">01</div><div class="process-step-label">User Research</div></div>
+            <div class="process-step"><div class="process-step-num">02</div><div class="process-step-label">Personas & Journey Maps</div></div>
+            <div class="process-step"><div class="process-step-num">03</div><div class="process-step-label">Paper Wireframes</div></div>
+            <div class="process-step"><div class="process-step-num">04</div><div class="process-step-label">Digital Wireframes & Lo-Fi</div></div>
+            <div class="process-step"><div class="process-step-num">05</div><div class="process-step-label">2× Usability Studies</div></div>
+            <div class="process-step"><div class="process-step-num">06</div><div class="process-step-label">Hi-Fi Prototype</div></div>
+          </div>
+
+          <div class="modal-h">Research Insights</div>
+          <div class="modal-p">Target users were 18–60 year olds who order delivery at least twice a week or dine out regularly. Three key pain points emerged: younger users wanted to secure sunset seats in advance; most customers requested a mobile app for ordering ahead or delivery; and the restaurant's quality food was inaccessible to those who couldn't dine in.</div>
+
+          <div class="modal-h">Key Design Decisions</div>
+          <div class="modal-p">A preview menu page lets users scan all dishes at a glance without opening each item individually — directly addressing a frustration found in Round 1 testing. The navigation bar uses a "more" button with a slider menu to separate food categories from other pages, solving a navigation confusion identified in testing. Promotional content was moved to fill the entire first screen after users struggled to notice it in the earlier layout.</div>
+
+          <div class="modal-h">What Usability Testing Changed</div>
+          <div class="modal-p">Round 1 revealed users were frustrated by the absence of a confirmation screen after entering card details, and couldn't easily find the reservation page. Round 2 surfaced concerns from elderly users about delivery complexity, questions about payment options, and doubts about menu readability on small screens. Both rounds directly shaped the final design.</div>
+
+          <div class="callout"><p>"Feedback really matters — as a designer you inevitably miss things. The final design was so much better than what I originally imagined, because of what real users told me."</p></div>
+
+          <div class="modal-h">Accessibility</div>
+          <div class="modal-p">Icons used throughout for easy navigation without relying on text labels. Preview and detail views ensure menus are readable at any screen size. Colour contrast and generous white space applied throughout to support a wide range of users including elderly customers.</div>
+
+          <div class="modal-links">
+            <a class="modal-link" href="https://www.figma.com/proto/MWrKHX2dgRuTAzLFhBjMqx/mobile-app-for-a-modern-restaurant?page-id=271%3A564&node-id=271-565&scaling=min-zoom&starting-point-node-id=271%3A565&mode=design" target="_blank">View Hi-Fi Prototype ↗</a>
+            <a class="modal-link" href="https://docs.google.com/presentation/d/1XikKE5m-fcU7cVZJea4qB-xmMN-dWlsaASKREHJRz8o/edit?usp=sharing" target="_blank">Full Case Study Slides ↗</a>
+          </div>
+
+          <div class="modal-meta">
+            <div class="modal-meta-item"><label>Role</label><span>UX Designer</span></div>
+            <div class="modal-meta-item"><label>Platform</label><span>Mobile App (iOS)</span></div>
+            <div class="modal-meta-item"><label>Duration</label><span>April – Sep 2023</span></div>
+            <div class="modal-meta-item"><label>Tools</label><span>Figma</span></div>
+            <div class="modal-meta-item"><label>Course</label><span>Google UX Design Certificate</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- KTT MODAL -->
+      <div id="modal-ktt" class="modal-inner" style="display:none;">
+        <div class="modal-hero-banner" style="background:linear-gradient(135deg,#2a2230,#3d2f4a);">
+          <span style="font-family:'Playfair Display',serif;font-size:1.6rem;color:rgba(255,255,255,0.12);">KTT Platform</span>
+        </div>
+        <div class="modal-body">
+          <div class="modal-tag">Volunteer · UX Design · EdTech · 2022</div>
+          <div class="modal-title">KTT — Karen Teacher Training Platform</div>
+          <div class="modal-subtitle">Free education platform for primary school teachers in Karen refugee camps</div>
+
+          <div class="modal-h">Overview</div>
+          <div class="modal-p">KTT is a free online platform built to give primary school teachers in Karen refugee camps access to structured educational content — something they had no reliable way to access before. As a volunteer UX designer, I was responsible for the entire teacher-facing dashboard: creating and organising courses, chapters, lectures, and quizzes, uploading content, and submitting for admin approval before it reaches students.</div>
+
+          <div class="modal-h">Key Design Decisions</div>
+          <div class="modal-p">The sidebar uses a clear Create / Edit structure — keeping the mental model simple: you either make something new or manage something existing. Every content form includes a Preview step before final upload, so teachers see exactly what students will see before committing. The approval workflow includes a structured checklist (Course Name, Tags, Description word count, Cover Image) giving admins a consistent, systematic way to review submissions rather than a freeform judgement call.</div>
+
+          <div class="modal-h">Honest Reflection</div>
+          <div class="modal-p">This project had no formal design process — I went straight to prototype without user interviews or usability testing. The biggest challenge wasn't the design itself but the collaboration: a fully remote, all-volunteer team of developers, designers, and non-technical stakeholders, where no one could push anyone else to deliver. Communication gaps meant some decisions were made without full context. If I were to revisit this, I'd run even a lightweight research session with actual teachers before finalising any flows.</div>
+
+          <div class="modal-meta">
+            <div class="modal-meta-item"><label>Role</label><span>UX Designer (Volunteer)</span></div>
+            <div class="modal-meta-item"><label>Platform</label><span>Web App — Teacher Dashboard</span></div>
+            <div class="modal-meta-item"><label>Tools</label><span>Figma</span></div>
+            <div class="modal-meta-item"><label>Year</label><span>2022</span></div>
+          </div>
+
+          <div class="modal-screens">
+            <div class="screen-block">
+              <div class="img-wrap" style="background:#2a2230;"><span style="font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.2);">Dashboard Overview</span></div>
+              <div class="screen-label">Content admin dashboard with courses + activity log</div>
+            </div>
+            <div class="screen-block">
+              <div class="img-wrap" style="background:#252035;"><span style="font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.2);">Edit All Chapters</span></div>
+              <div class="screen-label">Table view with pagination and inline actions</div>
+            </div>
+            <div class="screen-block">
+              <div class="img-wrap" style="background:#221e33;"><span style="font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.2);">Create New Course</span></div>
+              <div class="screen-label">Form with word count, upload and preview</div>
+            </div>
+            <div class="screen-block">
+              <div class="img-wrap" style="background:#201d35;"><span style="font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.2);">Approval Checklist</span></div>
+              <div class="screen-label">Structured admin review with pass/fail criteria</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AAC MODAL -->
+      <div id="modal-aac" class="modal-inner" style="display:none;">
+        <div class="modal-hero-banner" style="background:linear-gradient(135deg,#1e1a15,#2e2518);">
+          <span style="font-family:'Playfair Display',serif;font-size:1.6rem;color:rgba(255,255,255,0.12);">Asia Art Connect</span>
+        </div>
+        <div class="modal-body">
+          <div class="modal-tag">UI Design · E-Commerce · Art Gallery · 2021</div>
+          <div class="modal-title">Asia Art Connect — Art Marketplace</div>
+          <div class="modal-subtitle">E-commerce platform for emerging artists across Myanmar and Asia</div>
+
+          <div class="modal-h">Overview</div>
+          <div class="modal-p">Asia Art Connect (AAC) was established in Yangon in 2018 to discover and promote young and emerging artists — not just in Myanmar, but wherever they can be found. The platform offers art sales, custom portrait commissions, a virtual gallery, art classes, and interior consulting. I joined as a front-end developer intern and took the lead on UI design — my very first project in Figma.</div>
+
+          <div class="modal-h">Design Approach</div>
+          <div class="modal-p">The visual identity leans into an editorial, gallery aesthetic: thin elegant typography, generous white space, and watercolour washes as background texture to echo the art world itself. For the gallery I used an asymmetric layout mimicking how real galleries hang work — varied frame sizes, unexpected placement. The login and register screens use a distinctive rose-tinted geometric card motif, making the auth experience memorable. The seller listing page is deliberately minimal, reducing friction for artists uploading their work.</div>
+
+          <div class="modal-h">Honest Reflection</div>
+          <div class="modal-p">This was my first Figma project and I went straight to high-fidelity without any wireframing or user research. Looking back, the gallery and learning pages could benefit from clearer hierarchy and better mobile considerations. But more importantly, this project is what made me want to study UX properly — I realised visual design without understanding user goals and behaviour is only half the job. It's what led me to the Google UX Design Certificate.</div>
+
+          <div class="modal-meta">
+            <div class="modal-meta-item"><label>Role</label><span>UI Designer / Front-end Intern</span></div>
+            <div class="modal-meta-item"><label>Platform</label><span>Website — E-Commerce</span></div>
+            <div class="modal-meta-item"><label>Tools</label><span>Figma</span></div>
+            <div class="modal-meta-item"><label>Year</label><span>2021</span></div>
+          </div>
+
+          <div class="modal-screens">
+            <div class="screen-block">
+              <div class="img-wrap" style="background:#1e1a15;"><span style="font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.2);">Homepage</span></div>
+              <div class="screen-label">Hero with company intro + virtual gallery CTA</div>
+            </div>
+            <div class="screen-block">
+              <div class="img-wrap" style="background:#1c1a12;"><span style="font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.2);">Gallery Purchase</span></div>
+              <div class="screen-label">Artist cards with artwork and add-to-cart</div>
+            </div>
+            <div class="screen-block">
+              <div class="img-wrap" style="background:#191810;"><span style="font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.2);">Learning Page</span></div>
+              <div class="screen-label">Classes for kids and adults with watercolour backgrounds</div>
+            </div>
+            <div class="screen-block">
+              <div class="img-wrap" style="background:#1b1910;"><span style="font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.2);">Seller Page</span></div>
+              <div class="screen-label">Artist listing form with sell history</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ECO MODAL -->
+      <div id="modal-eco" class="modal-inner" style="display:none;">
+        <div class="modal-hero-banner" style="background:linear-gradient(135deg,#0d1f18,#1a3d2a);">
+          <span style="font-family:'Playfair Display',serif;font-size:1.6rem;color:rgba(255,255,255,0.12);letter-spacing:0.05em;">Eco Living Guide</span>
+        </div>
+        <div class="modal-body">
+          <div class="modal-tag">Agile Team Project · UX/UI Design · Research · 2024</div>
+          <div class="modal-title">Environmentally Friendly Living Guide</div>
+          <div class="modal-subtitle">A full-stack eco platform — prototyped, tested, and built with a 4-person agile team</div>
+
+          <div class="modal-h">Overview</div>
+          <div class="modal-p">This was a university agile software project built with a team of four. The goal: design and develop a real website that brings together eco-friendly resources, events, and community tools for people at any stage of their sustainability journey. I was responsible for UX/UI design, all three rounds of user testing, the design system, prototyping in Figma, and the non-technical project documentation. The team built a full React + Node.js + MariaDB production website within a 6-week sprint.</div>
+
+          <div class="modal-h">The Problem Space</div>
+          <div class="modal-p">Through market research across five competitor sites (EcoWatch, TreeHugger, Earth911, Sustainable Living Guide, Green Living Ideas), we found that every existing platform relied solely on their own authored content, had limited filtering, and none offered event creation or volunteer features. Our differentiator: a unified content index of curated third-party resources, advanced filtering, user-submitted content, and community event organisation — all built without ad-revenue pressure as a non-profit project.</div>
+
+          <div class="modal-h">My Role</div>
+          <div class="modal-p">While teammates handled front-end development (React, Tailwind CSS) and back-end (Node.js, MariaDB, JWT auth), I owned the entire design and research stream. This included running three rounds of user testing with Google Forms, creating the Figma high-fidelity prototype, defining the colour system and typography, researching filter/search UI patterns, and writing the majority of both the midterm and final reports. I also contributed minor front-end work — adding images, Tailwind CSS resizing, content links, and page connections.</div>
+
+          <div class="modal-h">Design System</div>
+          <div class="modal-p">The colour palette centres on #154752 — a blue-green that communicates reliability, calm, and nature without the wealth connotations of pure green. Two lighter tints (#154752 at 50% opacity and #DEEFEC) create depth and softness. Typography uses Poppins for taglines (distinctive, energetic), Verdana for body text (high readability across all browsers), with Candara dropped in production when its licensing requirements became clear. Rounded corners at 20–25px were deliberately chosen to communicate friendliness; sharp objects draw attention, round ones invite trust.</div>
+
+          <div class="modal-h">Design Process</div>
+          <div class="process-grid">
+            <div class="process-step"><div class="process-step-num">01</div><div class="process-step-label">Market Research & SWOT</div></div>
+            <div class="process-step"><div class="process-step-num">02</div><div class="process-step-label">User Surveys (Round 1)</div></div>
+            <div class="process-step"><div class="process-step-num">03</div><div class="process-step-label">Lo-Fi Wireframes</div></div>
+            <div class="process-step"><div class="process-step-num">04</div><div class="process-step-label">User Testing (Round 2)</div></div>
+            <div class="process-step"><div class="process-step-num">05</div><div class="process-step-label">Hi-Fi Prototype (Figma)</div></div>
+            <div class="process-step"><div class="process-step-num">06</div><div class="process-step-label">User Testing (Round 3)</div></div>
+          </div>
+
+          <div class="modal-h">User Testing — Three Rounds</div>
+          <div class="modal-p">Round 1 (initial wireframe): 6 participants across mixed age groups, genders and occupations. Validated strong interest in eco-lifestyle content, volunteer opportunities (unexpectedly the top feature at 83.3%), and confirmed user-friendliness as a top priority. Round 2 (lo-fi prototype): 5 participants completed usability tasks. Navigation scored a perfect average of 1/5 (easiest). Key finding: pages felt too similar in layout, and font size needed reducing — both addressed in the hi-fi. Round 3 (hi-fi prototype): 5 participants, 9 questions, average score 4.75/5. Filter design and account creation scored 5/5 (100%). One outlier gave login discoverability a 2/5 — surfaced a real navigation gap. Open-ended feedback: users loved the clean feel but asked for real content to replace Lorem Ipsum placeholder text.</div>
+
+          <div class="callout"><p>"The navigation is incredibly clear — I honestly just got mixed up by the lorem ipsum text. With actual content, this would be seamless." — User Testing Round 3</p></div>
+
+          <div class="modal-h">Production Website</div>
+          <div class="modal-p">After a final usability test on the skeleton production site confirmed the login, register, and filter flows all worked smoothly (average scores 1–1.2/5, where 1 = easiest), the team moved to the final build. Key front-end features included a data-driven filter engine unifying apps, articles, events, and videos into one searchable index; URL search parameters so filter state persisted across sessions and could be shared; a React component architecture with reusable Dropdown, Card Grid, Pagination, and Icon Text components; and responsive design tested across Chrome, Firefox, Safari, and Edge on both desktop and mobile.</div>
+
+          <div class="modal-h">Challenges & Honest Reflection</div>
+          <div class="modal-p">One team member was inactive from the start, reducing a 5-person project to 4 active contributors. Candara, chosen for the prototype, turned out to require a paid licence for web deployment — swapped late in development. Git merge conflicts during the integration phase cost time. Volunteer account creation had to be done from the server side rather than exposing a UI, due to time constraints. If I were doing this again, I'd push for even earlier testing on the production site — the skeleton testing revealed small but important UX gaps (a page refresh needed after account creation, subtle filter confusion) that could have been caught even sooner.</div>
+
+          <div class="modal-screens">
+            <div class="screen-block">
+              <div class="img-wrap" style="background:linear-gradient(135deg,#0d1f18,#1a3d2a);"><span style="font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.2);">Homepage</span></div>
+              <div class="screen-label">Event highlights, blog cards, recommended apps, about section</div>
+            </div>
+            <div class="screen-block">
+              <div class="img-wrap" style="background:#0f2a1e;"><span style="font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.2);">Content Index + Filter</span></div>
+              <div class="screen-label">Unified search across apps, articles, events, videos with URL-persistent filters</div>
+            </div>
+            <div class="screen-block">
+              <div class="img-wrap" style="background:#0c1e14;"><span style="font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.2);">Lifestyle Guide</span></div>
+              <div class="screen-label">Beginner & pro guides with tips and tricks in card layout</div>
+            </div>
+            <div class="screen-block">
+              <div class="img-wrap" style="background:#111f17;"><span style="font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.2);">Events + Login</span></div>
+              <div class="screen-label">Community event discovery, user auth with bcrypt + JWT tokens</div>
+            </div>
+          </div>
+
+          <div class="modal-meta">
+            <div class="modal-meta-item"><label>Role</label><span>UX/UI Designer · Researcher · Documenter</span></div>
+            <div class="modal-meta-item"><label>Team</label><span>4 members (1 FE dev, 1 BE dev, 1 support)</span></div>
+            <div class="modal-meta-item"><label>Platform</label><span>Web App (React + Node.js)</span></div>
+            <div class="modal-meta-item"><label>Duration</label><span>Feb – Mar 2024</span></div>
+            <div class="modal-meta-item"><label>Tools</label><span>Figma, React, Tailwind CSS, MariaDB</span></div>
+            <div class="modal-meta-item"><label>Course</label><span>CM2020 Agile Software Project</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FYP MODAL -->
+      <div id="modal-fyp" class="modal-inner" style="display:none;">
+        <div class="modal-hero-banner" style="background:linear-gradient(135deg,#0d1a24,#12293a);">
+          <span style="font-family:'Playfair Display',serif;font-size:1.6rem;color:rgba(255,255,255,0.12);letter-spacing:0.05em;">Wellness Hub</span>
+        </div>
+        <div class="modal-body">
+          <div class="modal-tag">CM3070 Computer Science Final Year Project · CM3055 Interaction Design · 2024–2025</div>
+          <div class="modal-title">Emotion-Aware Adaptive Email &amp; Task Manager</div>
+          <div class="modal-subtitle">A working prototype that senses cognitive strain and adapts its interface to reduce workplace stress</div>
+
+          <div class="modal-h">The Problem</div>
+          <div class="modal-p">Traditional task and email tools treat every user, every moment, and every task as equal — they have no awareness of whether you're overwhelmed, focused, or burned out. Research by the WHO and McKinsey confirms that email overload, notification fatigue, and rapid task-switching are leading contributors to workplace mental health deterioration. Every existing tool reviewed (Jira, Trello, ClickUp, Notion, monday.com) fulfils organisational productivity needs, but none adapts to the user's real-time emotional state.</div>
+
+          <div class="modal-h">The Goal</div>
+          <div class="modal-p">Design and build a functional prototype of an email and task management tool that detects cognitive strain through facial expression and screen-time data, then adapts its interface to protect the user's attention and well-being — without being intrusive, authoritarian, or privacy-violating.</div>
+
+          <div class="modal-h">Literature Foundation</div>
+          <div class="modal-p">The project is grounded in four key bodies of research. Rosalind Picard's foundational work on affective computing established that systems needn't achieve perfect emotion recognition — value lies in appropriately responding to affective cues. Microsoft's (2022) study on digital workplace stress-reduction highlighted that just-in-time interventions are more engaging but that user agency must be preserved. Letmathe &amp; Noll (2024) demonstrated that frequent email-checking is a primary driver of poor performance, directly informing the batch-processing and focus-session design. Working memory research confirmed that cognitive overload causes downstream task failures, justifying selective notification suppression during high-stress periods.</div>
+
+          <div class="modal-h">Design Process</div>
+          <div class="process-grid">
+            <div class="process-step"><div class="process-step-num">01</div><div class="process-step-label">Literature Review</div></div>
+            <div class="process-step"><div class="process-step-num">02</div><div class="process-step-label">Persona &amp; Storyboard</div></div>
+            <div class="process-step"><div class="process-step-num">03</div><div class="process-step-label">Lo-Fi Wireframes (Figma)</div></div>
+            <div class="process-step"><div class="process-step-num">04</div><div class="process-step-label">Hi-Fi Prototype + Survey</div></div>
+            <div class="process-step"><div class="process-step-num">05</div><div class="process-step-label">Initial Development + Testing</div></div>
+            <div class="process-step"><div class="process-step-num">06</div><div class="process-step-label">Final Build + Evaluation</div></div>
+          </div>
+
+          <div class="modal-h">The Persona: "Alex"</div>
+          <div class="modal-p">A storyboard was built around Alex, a mid-level manager, to ground the design in real workplace pain points identified in the literature: too many simultaneous tools, notification fatigue during peak hours, holiday-return cognitive paralysis from hundreds of unread emails, and the psychological inability to disconnect after office hours. These four stress-trigger scenarios defined the core feature set.</div>
+
+          <div class="modal-h">Key Design Decisions</div>
+          <div class="modal-p">The interface separates into two modes. Work Mode surfaces all tasks and emails in a density-appropriate layout with a blue tone chosen for its associations with calm professionalism. Focus Session — evolved from an earlier "rest mode" concept after user feedback flagged that stopping work mid-day felt unprofessional — hides non-urgent content, simplifies the layout, and makes wellness tools more prominent, all only after the user explicitly activates it. Colour coding (red/yellow/green urgency dots) and email priority ordering were informed by the email management strategies literature. The breathing exercise was retained across all testing rounds; the water challenge and social feed were cut after users found them distracting from the core productivity purpose.</div>
+
+          <div class="modal-h">Privacy &amp; Consent Architecture</div>
+          <div class="modal-p">Camera access is never activated automatically — the user must press "Enable Camera" before any browser permission is requested. Facial analysis uses a detection buffer: the system requires 12 repeated strain signals before it even suggests a focus session, preventing false positives from a single frown or blink. The system never changes the interface directly; it shows a dismissable notification first. Users can accept, dismiss, or exit focus mode at any time. This architecture was a direct response to the literature warning that fully automated emotion-driven systems erode workplace trust.</div>
+
+          <div class="callout"><p>"The system does not assume that every detection of strain should automatically change the interface — it assumes the system should assist the user in deciding when a protected workspace would be beneficial."</p></div>
+
+          <div class="modal-h">Technical Implementation</div>
+          <div class="modal-p">Built as a React + Vite web application styled with Tailwind CSS. The mood monitor uses the browser's getUserMedia() API for camera capture, feeds the live stream into MediaPipe Face Landmarker for frame-by-frame blendshape analysis, and maps those values through a rule-based layer to prototype states: Neutral, Focused, Possible Strain, Fatigued. Screen-time progression and Pomodoro-inspired focus/break cycles were implemented through timed state transitions. A line-chart visualisation displays mood-score trends across days rather than a single static status value. The breathing exercise runs both as a full dedicated page and as a persistent animated widget pinned in the sidebar.</div>
+
+          <div class="modal-h">User Testing — Three Rounds</div>
+          <div class="modal-p">Round 1 (Figma survey, 4 participants): confirmed zero awareness of mental support features in any existing tool, and validated strong interest in focus sessions (75%) and light/dark mode (75%). The social feed and water challenge scored low for necessity. Round 2 (initial development, 5 face-to-face participants): navigation scored a perfect 5/5 across all tasks; the breathing panel and focus toggle generated positive first impressions; one participant raised the professional optics of a "rest mode" label — leading to the reframe as "Focus Session". Round 3 (final build, 4 participants with Likert scale + interview): focus mode and screen-time progress scored the highest for likelihood of use (5/5 and 5/5). Mood monitor scored lowest (2.5/5) — users valued the concept but remained concerned about camera tracking in a workplace, even with optional consent. All four participants said they would use a tool like this in the future (5/5).</div>
+
+          <div class="modal-h">Reflection &amp; Limitations</div>
+          <div class="modal-p">The mood monitor — the project's most technically ambitious feature — was also its most contested one. Users understood the intent but the camera association with workplace surveillance overrode the consent architecture in their minds. A future version would explore passive sensing alternatives (typing speed, interaction frequency, calendar pressure) that don't require a camera. The email and task layers are prototype-level simulations rather than live integrations with Gmail or Outlook — a conscious scope decision to keep focus on the adaptive interaction design. Most state is client-side; there is no persistent cross-session user profiling. That said, the core contribution stands: a functioning prototype proving that productivity and wellbeing can be unified in one adaptive interface without requiring full automation or sacrificing user control.</div>
+
+          <div class="modal-screens">
+            <div class="screen-block">
+              <div class="img-wrap" style="background:linear-gradient(135deg,#0e1f30,#162a40);"><span style="font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.2);">Work Mode Dashboard</span></div>
+              <div class="screen-label">Priority tasks, inbox overview, mood score, wellness tracker chart</div>
+            </div>
+            <div class="screen-block">
+              <div class="img-wrap" style="background:linear-gradient(135deg,#0a1c2e,#122438);"><span style="font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.2);">Focus Session Active</span></div>
+              <div class="screen-label">Non-urgent content hidden · calmer layout · wellness tools surfaced</div>
+            </div>
+            <div class="screen-block">
+              <div class="img-wrap" style="background:linear-gradient(135deg,#0c1e32,#152a42);"><span style="font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.2);">Mood Monitor</span></div>
+              <div class="screen-label">Optional camera · MediaPipe blendshape analysis · detection buffer · recommendation banner</div>
+            </div>
+            <div class="screen-block">
+              <div class="img-wrap" style="background:linear-gradient(135deg,#0b1d30,#13283e);"><span style="font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.2);">Breathing &amp; Session Controls</span></div>
+              <div class="screen-label">Guided breathing page · sidebar widget · Pomodoro-inspired focus/break cycles</div>
+            </div>
+          </div>
+
+          <div class="modal-links">
+            <a class="modal-link" href="https://github.com/ZinThuThuLatt/emotional-awareness-email-task-manager" target="_blank">View on GitHub ↗</a>
+          </div>
+
+          <div class="modal-meta">
+            <div class="modal-meta-item"><label>Role</label><span>UX Designer · Researcher · Developer</span></div>
+            <div class="modal-meta-item"><label>Platform</label><span>Web App (React + Vite)</span></div>
+            <div class="modal-meta-item"><label>Duration</label><span>Oct 2024 – Mar 2025</span></div>
+            <div class="modal-meta-item"><label>Tools</label><span>Figma · React · Tailwind CSS · MediaPipe</span></div>
+            <div class="modal-meta-item"><label>Course</label><span>CM3070 Computer Science Final Project + CM3055 Interaction Design</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- INTERACTION DESIGN MODAL -->
+      <div id="modal-id" class="modal-inner" style="display:none;">
+        <div class="modal-hero-banner" style="background:linear-gradient(135deg,#0e1a2e,#162540);">
+          <span style="font-family:'Playfair Display',serif;font-size:1.6rem;color:rgba(255,255,255,0.12);letter-spacing:0.05em;">Interaction Design Studies</span>
+        </div>
+        <div class="modal-body">
+          <div class="modal-tag">CM3055 Interaction Design · Coursework · 2025</div>
+          <div class="modal-title">Interaction Design Studies — 5 App Analyses</div>
+          <div class="modal-subtitle">Applying UX frameworks to real-world apps: Duolingo, KBZPay, UberEats, IKEA, and Instagram</div>
+
+          <div class="modal-h">Overview</div>
+          <div class="modal-p">This coursework applied five major interaction design frameworks across five real apps, moving from pain point discovery through to redesigned wireframes and evidence-backed solutions. Each analysis was grounded in real user reviews, hands-on app walkthroughs, and established UX theory — demonstrating how systematic evaluation translates into actionable design decisions.</div>
+
+          <div class="modal-h">1 · Duolingo — Double Diamond Process</div>
+          <div class="modal-p">Using the Double Diamond's Discover–Define–Develop–Deliver structure, I identified two pain points from Google Play Store reviews: the "hearts" system forcing users to purchase progress after 5 mistakes (1,728 people agreed), and poor AI accuracy in speaking/listening lessons (169 people). For Problem 1, I proposed a "Mistake Review Mode" — users only lose a heart on a repeated mistake, shifting focus from anxiety to learning. For Problem 2, I designed a human-verified feedback layer where learners rate quiz answers and leave comments, feeding corrected data back into the AI model for better accuracy and transparency. Evaluation methods proposed: usability testing, in-app surveys after each lesson, and A/B testing for completion and drop-off rates.</div>
+
+          <div class="modal-h">2 · KBZPay — Norman's Seven Stages of Action</div>
+          <div class="modal-p">KBZPay is Myanmar's most-used banking app with over 10 million users. Walking through its onboarding flow revealed three friction points perfectly mapped by Norman's model: an unskippable 5-second ad disrupting goal formation; a login/register button so small and low-contrast it caused mis-taps (Fitts' Law); and a terms-and-conditions checkbox hidden behind the virtual keyboard. I redesigned the user flow as a clear welcome screen → Login/Create Account split → SMS OTP verification → optional bank account linking → home screen. The redesign eliminates all three failure points and gives new users an unambiguous path forward.</div>
+
+          <div class="modal-h">3 · UberEats — Persona Design</div>
+          <div class="modal-p">Drawing from both the Play Store (6M reviews) and App Store (9.4M reviews), I designed two contrasting personas. Danille (37, disabled freelancer in Texas) represents the loyal long-term user for whom fast, reliable delivery is a daily necessity — her frustration is rare but meaningful: occasional delays. Cody (19, university student in New York) represents the new user drawn in by coupon offers — his frustration is structural: coupons that work for the first order but not the second, with no clear explanation. These two edge cases reveal that UberEats' core UX problem isn't the product itself but transparency: better coupon filtering and clearer refund communication would directly address both users' pain points.</div>
+
+          <div class="modal-h">4 · IKEA Website — Heuristic Evaluation</div>
+          <div class="modal-p">Applying Nielsen's 10 Usability Heuristics revealed clear strengths: real-time stock availability (error prevention), a persistent cart count in the nav (system status visibility), autocomplete search (efficiency), and a clean minimalist layout. Weaknesses identified: Swedish product names like "PLATSA" confuse non-Swedish speakers (real-world match); filters reset when navigating back (user control); large promotional banners distract from primary tasks (aesthetic minimalism); and vague "Something went wrong" errors give users no recovery path. Recommended IA improvements: multi-category filtering so users can browse "tables" and "beds" simultaneously, and English descriptive subtitles beneath Swedish product codes.</div>
+
+          <div class="modal-h">5 · Instagram — Shneiderman's 8 Golden Rules</div>
+          <div class="modal-p">Instagram's forgot-password flow violates Shneiderman's error handling rule: the system sends a reset code, but the code never works, and users can request it indefinitely in a loop — with no limit, no alert, and no feedback to the developer team. I redesigned the flow with a 3-attempt cap: after 3 failed codes the system flags the issue as potential spam, locks further requests for 24 hours, and notifies the dev team for debugging. I also added progressive warnings ("You have 1 attempt remaining") and a password strength hint screen to reduce the frequency of resets in the first place. The hand-drawn wireframe maps all six states: login → request code → enter code → code fails (retry) → limit reached (locked) → successful login.</div>
+
+          <div class="callout"><p>"Every framework in this coursework — Double Diamond, Norman's model, heuristic evaluation — is a different lens on the same question: where is the gap between what the system does and what the user needs?"</p></div>
+
+          <div class="modal-h">Reflection</div>
+          <div class="modal-p">Across five analyses, a consistent theme emerged: UX problems rarely come from a single bad decision, they accumulate through small mismatches between system logic and user expectations. The Double Diamond's linearity is a limitation when evaluating AI-driven features that require continuous iteration; Norman's model excels at diagnosing execution breakdowns but underweights emotional context; heuristic evaluation surfaces issues quickly but needs real users to validate severity. The most effective evaluations combined multiple frameworks — and that's the approach I'd carry into any future project.</div>
+
+          <div class="modal-meta">
+            <div class="modal-meta-item"><label>Role</label><span>UX Researcher & Analyst</span></div>
+            <div class="modal-meta-item"><label>Type</label><span>Individual Coursework</span></div>
+            <div class="modal-meta-item"><label>Tools</label><span>Canva · Hand-drawn wireframes</span></div>
+            <div class="modal-meta-item"><label>Course</label><span>CM3055 Interaction Design</span></div>
+            <div class="modal-meta-item"><label>Frameworks</label><span>Double Diamond · Norman's 7 Stages · Nielsen Heuristics · Persona Design · Shneiderman's 8 Rules</span></div>
+          </div>
+
+          <div class="modal-screens">
+            <div class="screen-block">
+              <div class="img-wrap" style="background:linear-gradient(135deg,#0e1820,#152030);"><span style="font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.2);">Duolingo Analysis</span></div>
+              <div class="screen-label">Double Diamond · Mistake Review Mode · Human-AI Feedback Layer</div>
+            </div>
+            <div class="screen-block">
+              <div class="img-wrap" style="background:linear-gradient(135deg,#0d1a28,#152238);"><span style="font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.2);">KBZPay Onboarding</span></div>
+              <div class="screen-label">Norman's 7 Stages · Redesigned User Flow Diagram</div>
+            </div>
+            <div class="screen-block">
+              <div class="img-wrap" style="background:linear-gradient(135deg,#0f1c2a,#162535);"><span style="font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.2);">UberEats Personas</span></div>
+              <div class="screen-label">Primary & Secondary Persona · Play Store Evidence</div>
+            </div>
+            <div class="screen-block">
+              <div class="img-wrap" style="background:linear-gradient(135deg,#101e2e,#172640);"><span style="font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.2);">IKEA + Instagram</span></div>
+              <div class="screen-label">Heuristic Evaluation · IA Recommendations · Wireframe Redesign</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  function openModal(id) {
+    document.querySelectorAll('.modal-inner').forEach(el => el.style.display = 'none');
+    document.getElementById('modal-' + id).style.display = 'block';
+    document.getElementById('modalBackdrop').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal(e) { if (e.target === document.getElementById('modalBackdrop')) closeModalDirect(); }
+  function closeModalDirect() { document.getElementById('modalBackdrop').classList.remove('open'); document.body.style.overflow = ''; }
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModalDirect(); });
+</script>
+</body>
+</html>
